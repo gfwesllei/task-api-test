@@ -1,14 +1,10 @@
 package br.com.devwell.tasks;
 
-import groovy.util.logging.Log;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.ResponseBody;
 import org.hamcrest.CoreMatchers;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.awt.*;
 
 import static io.restassured.RestAssured.given;
 
@@ -50,7 +46,7 @@ public class ApiTest {
         given()
                 .pathParam("id",idDelete)
                 .when()
-                .post("/todo/{id}").then().log().all().statusCode(400).body("message", CoreMatchers.containsString("Task not found"));
+                .delete("/todo/{id}").then().statusCode(400).body("message", CoreMatchers.containsString("Task not found"));
     }
 
     @Test
@@ -61,7 +57,7 @@ public class ApiTest {
                 .when()
                 .post("/todo").then().statusCode(201).extract().response().path("id");
 
-        given().when().delete("/todo/"+idResponse).then().statusCode(204);
+        given().pathParam("id",idResponse).when().delete("/todo/{id}").then().statusCode(200);
     }
 
 }
